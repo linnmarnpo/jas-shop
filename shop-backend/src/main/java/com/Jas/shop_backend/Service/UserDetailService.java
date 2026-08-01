@@ -82,10 +82,14 @@ public class UserDetailService implements UserDetailsService {
             userDAO.save(user);
 
             //Call the method to send email
-            emailService.sendMail(user);
+            try {
+                emailService.sendMail(user);
+            } catch (Exception mailException) {
+                log.error("User created successfully, but verification email failed to send: {}", mailException.getMessage());
+            }
 
         } catch (Exception e) {
-            log.error("Error creating user or sending email: {}", e.getMessage(), e);
+            log.error("Error creating user: {}", e.getMessage(), e);
             throw new RuntimeException("Error creating user: " + e.getMessage(), e);
         }
     }
