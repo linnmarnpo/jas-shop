@@ -39,8 +39,18 @@ public class JWTTokenHelper {
     }
 
     private Key getSignInKey() {
-        byte[] keysBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keysBytes);
+        byte[] keyBytes;
+        try {
+            keyBytes = Decoders.BASE64.decode(secretKey);
+        } catch (Exception e) {
+            keyBytes = secretKey.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        }
+        if (keyBytes.length < 32) {
+            byte[] paddedKey = new byte[32];
+            System.arraycopy(keyBytes, 0, paddedKey, 0, keyBytes.length);
+            keyBytes = paddedKey;
+        }
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String getToken(HttpServletRequest request) {
