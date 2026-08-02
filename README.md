@@ -11,12 +11,12 @@
 
 ## 🌟 Key Features
 
-- 🛍️ **Interactive Product Catalog**: Real-time category filtering, search, and specification sorting.
-- 🛒 **Slide-out Cart Drawer**: Reactive state management powered by Pinia.
-- 🔐 **Spring Security & JWT Authentication**: Secure user registration, authentication headers, and role authorization.
-- ☁️ **Cloudinary Image Integration**: Automated cloud image upload and CDN delivery for product assets.
-- 🗄️ **Relational PostgreSQL Persistence**: Structured database schema managed with Spring Data JPA & Hibernate ORM.
-- 🚀 **SPA History Routing**: Configured Vercel rewrite rules (`vercel.json`) ensuring seamless direct route refreshes without 404 errors.
+- nteractive Product Catalog**: Real-time category filtering, search, and specification sorting.
+- Slide-out Cart Drawer**: Reactive state management powered by Pinia.
+- Spring Security & JWT Authentication**: Secure user registration, authentication headers, and role authorization.
+- Cloudinary Image Integration**: Automated cloud image upload and CDN delivery for product assets.
+- Relational PostgreSQL Persistence**: Structured database schema managed with Spring Data JPA & Hibernate ORM.
+- SPA History Routing**: Configured Vercel rewrite rules (`vercel.json`) ensuring seamless direct route refreshes without 404 errors.
 
 ---
 
@@ -66,7 +66,7 @@ jas-shop/
 
 ---
 
-## 🚀 Local Development Setup
+## Local Development Setup
 
 ### **Prerequisites**
 - **Node.js** (v18.x or later)
@@ -76,7 +76,7 @@ jas-shop/
 
 ---
 
-### 1️⃣ Frontend Setup
+### 1️ Frontend Setup
 
 ```bash
 # Navigate to frontend directory
@@ -93,7 +93,7 @@ The frontend client will run locally at `http://localhost:5173`.
 
 ---
 
-### 2️⃣ Backend Setup
+### 2️ Backend Setup
 
 1. Configure your database & Cloudinary credentials in `shop-backend/src/main/resources/application.properties`:
 
@@ -139,9 +139,9 @@ The REST API backend will run locally at `http://localhost:8080`.
 
 ---
 
-## 👨‍💻 Developer
+## Developer
 
 **Linn Marn Po** — Full Stack Developer & CS Student  
 - **GitHub**: [@linnmarnpo](https://github.com/linnmarnpo)  
 - **Telegram**: [@linnmarn_po](https://t.me/linnmarn_po)  
-- **Live Portfolio**: [linnmarnpo.dev](https://github.com/linnmarnpo)
+- **Live Portfolio**: [linnmarnpo.dev](https://linnmarnpo.vercel.app/))
