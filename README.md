@@ -1,4 +1,4 @@
-# JAS Shop — Enterprise Multi-Vendor E-Commerce Platform 🛒
+# JAS Shop — Enterprise E-Commerce Platform 
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-jas--shop.vercel.app-cyan?style=for-the-badge&logo=vercel)](https://jas-shop.vercel.app)
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=for-the-badge&logo=vuedotjs)](https://vuejs.org/)
