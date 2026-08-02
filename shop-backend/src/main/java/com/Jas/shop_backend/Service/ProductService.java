@@ -5,6 +5,7 @@ import com.Jas.shop_backend.exception.ApiConflictException;
 import com.Jas.shop_backend.exception.ResourceNotFoundException;
 import com.Jas.shop_backend.model.Category;
 import com.Jas.shop_backend.model.DAO.CategoryDAO;
+import com.Jas.shop_backend.model.DAO.OrderItemDAO;
 import com.Jas.shop_backend.model.DAO.ProductDAO;
 import com.Jas.shop_backend.model.Product;
 import com.Jas.shop_backend.specification.ProductSpecification;
@@ -17,10 +18,12 @@ public class ProductService {
 
     public final ProductDAO productDAO;
     public final CategoryDAO categoryDAO;
+    public final OrderItemDAO orderItemDAO;
 
-    public ProductService(ProductDAO productDAO, CategoryDAO categoryDAO) {
+    public ProductService(ProductDAO productDAO, CategoryDAO categoryDAO, OrderItemDAO orderItemDAO) {
         this.productDAO = productDAO;
         this.categoryDAO = categoryDAO;
+        this.orderItemDAO = orderItemDAO;
     }
 
     public ProductDTO addProduct(ProductDTO productDTO) {
@@ -65,7 +68,12 @@ public class ProductService {
         Product product = productDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product does not exist"));
 
-        productDAO.delete(product);
+        if (orderItemDAO.existsByProductId(id)) {
+            product.setActive(false);
+            productDAO.save(product);
+        } else {
+            productDAO.delete(product);
+        }
     }
     /**
      * edit Product
@@ -109,12 +117,13 @@ public class ProductService {
 
     /**
      * get all products
-     * @return all products
+     * @return all active products
      */
     public List<Product> getProducts(Long categoryId) {
 
-        Specification<Product> productSpecification =
-                Specification.where(ProductSpecification.hasCategoryId(categoryId));
+        Specification<Product> productSpecification = Specification
+                .where(ProductSpecification.isActive(true))
+                .and(ProductSpecification.hasCategoryId(categoryId));
 
         return productDAO.findAll(productSpecification);
     }
@@ -133,6 +142,7 @@ public class ProductService {
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
         productDTO.setPrice(product.getPrice());
+        productDTO.setActive(product.getActive());
         productDTO.setCategoryId(product.getCategory().getId());
         productDTO.setProductVariants(product.getProductVariants());
         productDTO.setResources(product.getResources());
@@ -151,6 +161,9 @@ public class ProductService {
 
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
+        if (productDTO.getActive() != null) {
+            product.setActive(productDTO.getActive());
+        }
         product.setCategory(category);
 
     }

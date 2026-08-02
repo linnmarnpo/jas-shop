@@ -104,6 +104,15 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex) {
+        return buildError(
+                HttpStatus.CONFLICT,
+                "Database constraint violation",
+                Map.of("error", List.of("This action cannot be completed because the resource is referenced by existing orders or records."))
+        );
+    }
+
     /* ---------------- FALLBACK ---------------- */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleUnknown(Exception ex) {

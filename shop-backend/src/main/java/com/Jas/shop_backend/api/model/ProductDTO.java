@@ -27,6 +27,8 @@ public class ProductDTO {
     @NotNull
     private Long categoryId;
 
+    private Boolean active = true;
+
     @NotNull(message = "Product variants required")
     private List<ProductVariant> productVariants;
 

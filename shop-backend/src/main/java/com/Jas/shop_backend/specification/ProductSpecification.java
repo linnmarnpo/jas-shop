@@ -11,4 +11,9 @@ public class ProductSpecification {
                 criteriaBuilder.equal(root.get("category").get("id"),categoryId));
     }
 
+    public static Specification<Product> isActive(Boolean active) {
+        return ((root, query, criteriaBuilder) ->
+                active == null ? null :
+                criteriaBuilder.equal(root.get("active"), active));
+    }
 }
