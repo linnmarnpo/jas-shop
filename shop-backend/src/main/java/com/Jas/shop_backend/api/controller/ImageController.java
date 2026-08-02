@@ -1,5 +1,7 @@
 package com.Jas.shop_backend.api.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,17 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/images")
 public class ImageController {
 
-    // ⬇️ CHANGED root folder
-    private final Path root = Paths.get("productImages");
+    private final Cloudinary cloudinary;
+
+    public ImageController(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
+    }
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadImage(
@@ -31,29 +33,20 @@ public class ImageController {
                     .toLowerCase()
                     .replaceAll("[^a-z0-9-_]", "-");
 
-            // productImages/name/
-            Path productDir = root.resolve(safeName);
-            Files.createDirectories(productDir);
+            // Upload directly to Cloudinary folder "productImages/name"
+            Map<?, ?> uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "folder", "productImages/" + safeName
+                    )
+            );
 
-            String filename = UUID.randomUUID() + getExtension(file);
-            Path target = productDir.resolve(filename);
-
-            Files.copy(file.getInputStream(), target);
-
-            // public URL
-            String url = "/productImages/" + safeName + "/" + filename;
+            // Get secure HTTPS URL returned by Cloudinary
+            String url = uploadResult.get("secure_url").toString();
             return ResponseEntity.ok(url);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to upload image to Cloudinary", e);
         }
     }
-
-    // helper
-    private String getExtension(MultipartFile file) {
-        String name = file.getOriginalFilename();
-        return (name != null && name.contains("."))
-                ? name.substring(name.lastIndexOf("."))
-                : ".jpg";
-    }
-}
+}
