@@ -66,7 +66,7 @@
 
           <!-- Cart Icon with Counter Badge -->
           <button
-            @click="isCartOpen = true"
+            @click="cartStore.openCart()"
             type="button"
             class="relative p-1 text-gray-800 transition hover:text-black focus:outline-none"
             title="Shopping Cart"
@@ -212,15 +212,15 @@
     <!-- SHOPPING CART DRAWER MODAL -->
     <Transition name="fade">
       <div
-        v-if="isCartOpen"
-        @click="isCartOpen = false"
+        v-if="cartStore.isOpen"
+        @click="cartStore.closeCart()"
         class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs"
       ></div>
     </Transition>
 
     <Transition name="slide-right">
       <div
-        v-if="isCartOpen"
+        v-if="cartStore.isOpen"
         class="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-white z-50 shadow-2xl flex flex-col justify-between"
       >
         <div class="flex items-center justify-between px-5 py-4 bg-gray-100">
@@ -229,7 +229,7 @@
           </h5>
           <h5 v-else class="text-xl font-bold text-gray-900">Your Cart</h5>
           <button
-            @click="isCartOpen = false"
+            @click="cartStore.closeCart()"
             type="button"
             class="text-gray-500 hover:text-black focus:outline-none"
           >

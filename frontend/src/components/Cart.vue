@@ -53,7 +53,7 @@
         <div class="mt-8">
           <router-link
             :to="{ name: 'shop' }"
-            @click="closeCart()"
+            @click="cartStore.closeCart()"
             class="px-8 py-3 border border-black"
           >
             Continue shopping
@@ -72,7 +72,7 @@
       </div>
       <router-link
         :to="{ name: 'checkout' }"
-        @click="closeCart()"
+        @click="cartStore.closeCart()"
         class="block py-3 mt-3 text-center text-white bg-gray-900 hover:bg-gray-800"
       >
         Checkout
@@ -86,14 +86,6 @@ import { Icon } from "@iconify/vue";
 import { useCartStore } from "../stores/cart";
 
 const cartStore = useCartStore();
-
-const closeCart = () => {
-  const offcanvasElement = document.getElementById("offcanvasRight");
-  const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
-  if (offcanvasInstance) {
-    offcanvasInstance.hide();
-  }
-};
 </script>
 
 <style scoped>

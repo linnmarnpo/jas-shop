@@ -132,12 +132,13 @@ onMounted(() => {
             tag="ul"
             @before-enter="beforeEnter"
             @enter="enter"
-            class="items-center mx-4 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border-b-2 border-gray-400 min-h-[30rem]"
+            class="py-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 border-b-2 border-gray-400 min-h-[30rem]"
           >
             <li
               v-for="(product, index) in productStore.productsUI"
               :key="index"
               :data-index="index + 1"
+              class="flex flex-col"
             >
               <router-link
                 :to="{
@@ -145,15 +146,19 @@ onMounted(() => {
                   params: { productName: formatProductName(product.name) },
                   query: { id: product.id },
                 }"
+                class="group block"
               >
-                <div>
-                  <img :src="productStore.getPrimaryImage(product)" />
+                <div class="w-full h-64 sm:h-72 lg:h-80 overflow-hidden bg-gray-100 rounded-md">
+                  <img
+                    :src="productStore.getPrimaryImage(product)"
+                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-                <div class="flex justify-between px-2 pt-2 text-xs md:text-sm">
-                  <p class="font-medium text-gray-900 truncate max-w-[150px]">{{ product.name }}</p>
+                <div class="flex justify-between px-1 pt-3 text-xs sm:text-sm">
+                  <p class="font-medium text-gray-900 truncate max-w-[140px] sm:max-w-[180px]">{{ product.name }}</p>
                   <p class="font-bold text-gray-900">${{ product.price.toFixed(2) }}</p>
                 </div>
-                <div class="flex justify-between px-2 mt-1.5 items-center">
+                <div class="flex justify-between px-1 mt-1.5 items-center">
                   <div class="color flex items-center space-x-1">
                     <template v-for="color in product.colors" :key="color">
                       <span
@@ -170,14 +175,14 @@ onMounted(() => {
 
         <template v-else>
           <div
-            class="items-center mx-4 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border-b-2 border-gray-400 min-h-[30rem]"
+            class="py-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 border-b-2 border-gray-400 min-h-[30rem]"
           >
-            <div v-for="n in 8" :key="n">
+            <div v-for="n in 8" :key="n" class="flex flex-col">
               <div
-                class="flex items-center justify-center w-[400px] h-[20rem] bg-gray-300 rounded animate-pulse my-4"
+                class="flex items-center justify-center w-full h-64 sm:h-72 lg:h-80 bg-gray-200 rounded-md animate-pulse"
               >
                 <svg
-                  class="w-10 h-10 text-gray-200 dark:text-gray-600"
+                  class="w-10 h-10 text-gray-400"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -188,25 +193,20 @@ onMounted(() => {
                   />
                 </svg>
               </div>
-              <div class="flex justify-between px-3 py-2">
+              <div class="flex justify-between px-1 py-3">
                 <div
-                  class="h-2.5 bg-gray-200 rounded-full animate-pulse w-24"
+                  class="h-3 bg-gray-200 rounded-full animate-pulse w-20 sm:w-28"
                 ></div>
                 <div
-                  class="h-2.5 bg-gray-200 rounded-full animate-pulse w-24"
+                  class="h-3 bg-gray-200 rounded-full animate-pulse w-12 sm:w-16"
                 ></div>
               </div>
-              <div class="flex justify-between px-3 mt-2">
-                <div>
-                  <Icon icon="ic:round-color-lens" width="30" height="30" />
-                </div>
-                <div class="mt-1 color">
-                  <span
-                    v-for="n in 3"
-                    :key="n"
-                    class="inline-block w-4 h-4 ml-1 bg-gray-200 rounded-full animate-pulse"
-                  ></span>
-                </div>
+              <div class="flex items-center space-x-1.5 px-1 mt-1">
+                <span
+                  v-for="n in 3"
+                  :key="n"
+                  class="inline-block w-3 h-3 bg-gray-200 rounded-full animate-pulse"
+                ></span>
               </div>
             </div>
           </div>

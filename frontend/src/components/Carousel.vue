@@ -1,7 +1,7 @@
 <template>
   <div class="relative w-full overflow-hidden bg-black group">
     <!-- Carousel Images Slider -->
-    <div class="relative w-full h-[40vh] md:h-[65vh] lg:h-[80vh]">
+    <div class="relative w-full h-[45vh] sm:h-[60vh] md:h-[70vh] lg:h-[85vh] min-h-[250px] max-h-[900px]">
       <transition-group name="fade" tag="div" class="w-full h-full">
         <div
           v-for="(slide, index) in slides"
@@ -21,15 +21,15 @@
     </div>
 
     <!-- Indicator Dots (Bottom Center) -->
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+    <div class="absolute bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-20 flex space-x-1.5 sm:space-x-2.5">
       <button
         v-for="(slide, index) in slides"
         :key="slide.id"
         @click="goToSlide(index)"
         type="button"
         :class="[
-          'w-3 h-3 rounded-full transition-all duration-300 focus:outline-none',
-          currentIndex === index ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/80'
+          'w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full transition-all duration-300 focus:outline-none',
+          currentIndex === index ? 'bg-white scale-125 shadow-md' : 'bg-white/50 hover:bg-white/80'
         ]"
         :aria-label="'Go to slide ' + (index + 1)"
       ></button>
@@ -39,20 +39,20 @@
     <button
       @click="prevSlide"
       type="button"
-      class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2 text-white bg-black/40 hover:bg-black/80 rounded-full transition-all duration-200 focus:outline-none"
+      class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2.5 text-white bg-black/40 hover:bg-black/80 rounded-full transition-all duration-200 focus:outline-none backdrop-blur-xs"
       aria-label="Previous slide"
     >
-      <Icon icon="uil:angle-left" class="w-8 h-8" />
+      <Icon icon="uil:angle-left" class="w-5 h-5 sm:w-8 sm:h-8" />
     </button>
 
     <!-- Next Arrow Button -->
     <button
       @click="nextSlide"
       type="button"
-      class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2 text-white bg-black/40 hover:bg-black/80 rounded-full transition-all duration-200 focus:outline-none"
+      class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2.5 text-white bg-black/40 hover:bg-black/80 rounded-full transition-all duration-200 focus:outline-none backdrop-blur-xs"
       aria-label="Next slide"
     >
-      <Icon icon="uil:angle-right" class="w-8 h-8" />
+      <Icon icon="uil:angle-right" class="w-5 h-5 sm:w-8 sm:h-8" />
     </button>
   </div>
 </template>

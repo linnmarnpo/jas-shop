@@ -5,7 +5,8 @@ export const useCartStore = defineStore("cart", {
 
     state:() => ({
         carts: [],
-        isLoading: false
+        isLoading: false,
+        isOpen: false
     }),
 
     getters: {
@@ -17,6 +18,15 @@ export const useCartStore = defineStore("cart", {
     },
 
     actions: {
+        openCart() {
+            this.isOpen = true;
+        },
+        closeCart() {
+            this.isOpen = false;
+        },
+        toggleCart() {
+            this.isOpen = !this.isOpen;
+        },
         clearCarts() {
             this.carts = [];
         },
@@ -33,7 +43,8 @@ export const useCartStore = defineStore("cart", {
             this.isLoading = true;
             try {
                 await axios.post('/carts/create', data);
-                this.getCarts();
+                await this.getCarts();
+                this.openCart();
             } catch (error) {
                 console.log(error)
             }
