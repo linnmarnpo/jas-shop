@@ -9,7 +9,7 @@
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
 - nteractive Product Catalog**: Real-time category filtering, search, and specification sorting.
 - Slide-out Cart Drawer**: Reactive state management powered by Pinia.
@@ -20,7 +20,7 @@
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## Tech Stack & Architecture
 
 ### **Frontend (Client)**
 - **Framework**: Vue 3 (Composition API / Options API)
@@ -39,7 +39,7 @@
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 jas-shop/
@@ -127,7 +127,7 @@ The REST API backend will run locally at `http://localhost:8080`.
 
 ---
 
-## 🌐 Production Deployment
+## Production Deployment
 
 - **Frontend (Vercel)**: Deployed automatically from `frontend/` with History Mode rewrites:
   ```json
