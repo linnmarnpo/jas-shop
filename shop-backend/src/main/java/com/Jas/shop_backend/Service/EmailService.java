@@ -35,7 +35,7 @@ public class EmailService {
                 .build();
     }
 
-    @Value("${spring.mail.username:linnmarn882@gmail.com}")
+    @Value("${spring.mail.username:}")
     private String sender;
 
     @Value("${resend.api.key:${RESEND_API_KEY:}}")
