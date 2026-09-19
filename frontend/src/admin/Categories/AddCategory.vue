@@ -91,6 +91,10 @@
               @change="onFileChange"
             />
           </div>
+          <!-- Upload error message -->
+          <p v-if="uploadError" class="mt-2 text-sm text-red-500">
+            {{ uploadError }}
+          </p>
         </div>
         <div>
           <input
@@ -115,11 +119,12 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "../../service/axios";
 import { useCategoryStore } from "../../stores/category";
+import { uploadToSupabase } from "../../service/supabaseStorage";
 
 const router = useRouter();
 const isLoading = ref(false);
+const uploadError = ref("");
 
 const categoryStore = useCategoryStore();
 
@@ -159,23 +164,29 @@ const onDrop = async (e) => {
   await uploadImage(file);
 };
 
-/* upload image */
+/* upload image - directly to Supabase Storage under categories/{name}/ folder */
 const uploadImage = async (file) => {
-  const formData = new FormData();
-  formData.append("image", file);
-  if (!data.value.name) {
+  uploadError.value = "";
+  if (!data.value.name.trim()) {
+    uploadError.value = "Please enter a category name before uploading an image.";
     return;
   }
-  formData.append("name", data.value.name);
-  const res = await axios.post("/images/upload", formData);
-
-  data.value.imageUrl = axios.defaults.baseURL + res.data;
+  isLoading.value = true;
+  try {
+    // Upload to categories/{category-name}/ subfolder in Supabase
+    const publicUrl = await uploadToSupabase(file, "categories", data.value.name);
+    data.value.imageUrl = publicUrl;
+  } catch (err) {
+    console.error("Image upload failed:", err);
+    uploadError.value = "Image upload failed. Please try again.";
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 /* remove image */
 const removeImage = () => {
-  data.value.image = null;
-  data.imageUrl.value = null;
+  data.value.imageUrl = "";
   fileInput.value.value = "";
 };
 </script>

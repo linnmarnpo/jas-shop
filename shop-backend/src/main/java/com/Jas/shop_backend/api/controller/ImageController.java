@@ -1,7 +1,6 @@
 package com.Jas.shop_backend.api.controller;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
+import com.Jas.shop_backend.Service.ImageKitStorageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,43 +9,55 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/images")
 public class ImageController {
 
-    private final Cloudinary cloudinary;
+    private static final Set<String> ALLOWED_FOLDERS = Set.of("products", "categories");
 
-    public ImageController(Cloudinary cloudinary) {
-        this.cloudinary = cloudinary;
+    private final ImageKitStorageService imageKitStorageService;
+
+    public ImageController(ImageKitStorageService imageKitStorageService) {
+        this.imageKitStorageService = imageKitStorageService;
     }
 
+    /**
+     * Upload an image to ImageKit via the backend (private key stays server-side).
+     *
+     * Resulting ImageKit path:
+     *   - with name:    /{folder}/{safe-name}/{uuid}.ext  e.g. /products/red-shirt/abc.jpg
+     *   - without name: /{folder}/{uuid}.ext              e.g. /categories/abc.jpg
+     *
+     * @param file   the image file
+     * @param folder target folder — must be "products" or "categories"
+     * @param name   optional product/category name used as a subfolder
+     * @return the public ImageKit CDN URL of the uploaded image
+     */
     @PostMapping("/upload")
     public ResponseEntity<?> uploadImage(
             @RequestParam("image") MultipartFile file,
-            @RequestParam("name") String name
+            @RequestParam("folder") String folder,
+            @RequestParam(value = "name", required = false, defaultValue = "") String name
     ) {
+        if (!ALLOWED_FOLDERS.contains(folder)) {
+            return ResponseEntity.badRequest()
+                    .body("Invalid folder. Allowed values: " + ALLOWED_FOLDERS);
+        }
+
         try {
-            // sanitize product name
-            String safeName = name
-                    .toLowerCase()
-                    .replaceAll("[^a-z0-9-_]", "-");
+            // Build subfolder: products/red-shirt  or just  products
+            String targetFolder = folder;
+            if (name != null && !name.isBlank()) {
+                String safeName = name.toLowerCase().replaceAll("[^a-z0-9-_]", "-");
+                targetFolder = folder + "/" + safeName;
+            }
 
-            // Upload directly to Cloudinary folder "productImages/name"
-            Map<?, ?> uploadResult = cloudinary.uploader().upload(
-                    file.getBytes(),
-                    ObjectUtils.asMap(
-                            "folder", "productImages/" + safeName
-                    )
-            );
-
-            // Get secure HTTPS URL returned by Cloudinary
-            String url = uploadResult.get("secure_url").toString();
-            return ResponseEntity.ok(url);
-
+            String publicUrl = imageKitStorageService.uploadImage(file, targetFolder);
+            return ResponseEntity.ok(publicUrl);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload image to Cloudinary", e);
+            throw new RuntimeException("Failed to upload image to ImageKit", e);
         }
     }
-}
+}

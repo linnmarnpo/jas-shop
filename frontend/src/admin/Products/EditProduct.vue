@@ -2,9 +2,9 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
-import axios from "../../service/axios";
 import { useCategoryStore } from "../../stores/category";
 import { useProductStore } from "../../stores/product";
+import { uploadToSupabase } from "../../service/supabaseStorage";
 
 const categoryStore = useCategoryStore();
 const productStore = useProductStore();
@@ -94,14 +94,15 @@ const uploadImage = async (file, index) => {
     error.value = true;
     return;
   }
-
-  const formData = new FormData();
-  formData.append("image", file);
-  formData.append("name", product.name);
-
-  const res = await axios.post("/images/upload", formData);
-
-  product.resources[index].url = axios.defaults.baseURL + res.data;
+  error.value = false;
+  try {
+    // Upload to products/{product-name}/ subfolder in Supabase
+    const publicUrl = await uploadToSupabase(file, "products", product.name);
+    product.resources[index].url = publicUrl;
+  } catch (err) {
+    console.error("Image upload failed:", err);
+    error.value = true;
+  }
 };
 
 const onFileChange = (e, index) => {
